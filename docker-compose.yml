@@ -1,0 +1,13 @@
+version: '2'
+services:
+  serve:
+    extends: 
+      file: docker-compose-base.yml
+      service: jekyll 
+    command: jekyll serve --drafts
+  
+  build:
+    extends: 
+      file: docker-compose-base.yml
+      service: jekyll 
+    command: jekyll build --drafts

@@ -1,0 +1,11 @@
+version: '2'
+services:
+  jekyll:
+    environment:
+      - JEKYLL_VERSION=3.5
+    image: jekyll/jekyll:latest
+    network_mode: "host"
+    volumes:
+      - /home/przemek/projects/blog/dev:/srv/jekyll
+      - /home/przemek/projects/blog/master:/srv/jekyll/_site
+
