@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <generator uri="http://jekyllrb.com" version="3.6.0">Jekyll</generator>
+  
+  
+  <link href="/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="/" rel="alternate" type="text/html" />
+  <updated>2017-10-11T15:44:48-05:00</updated>
+  <id>//</id>
+
+  
+    <title type="html">Przemek blog</title>
+  
+
+  
+    <subtitle></subtitle>
+  
+
+  
+
+  
+  
+    <entry>
+      
+      <title type="html">Local jekyll in docker and with docker-compose</title>
+      
+      <link href="/2017/10/02/working-with-jekyll-in-docker/" rel="alternate" type="text/html" title="Local jekyll in docker and with docker-compose" />
+      <published>2017-10-02T00:00:00-05:00</published>
+      <updated>2017-10-02T00:00:00-05:00</updated>
+      <id>/2017/10/02/working-with-jekyll-in-docker</id>
+      <content type="html" xml:base="/2017/10/02/working-with-jekyll-in-docker/">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Jekyll&lt;/code&gt; is a cool piece of software but its configuration on e local device may be painful for people who are not familiar with Ruby stack. To simplify this process we may use &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll&lt;/code&gt; inside &lt;a href=&quot;https://www.docker.com/&quot;&gt;docker&lt;/a&gt; image. 
+In this tutorial I will use official &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll&lt;/code&gt; docker image from &lt;a href=&quot;https://hub.docker.com/r/jekyll/jekyll/&quot;&gt;docker hub&lt;/a&gt;.
+ Source code and documentation of this image is available on &lt;a href=&quot;https://github.com/jekyll/docker/blob/master/README.md&quot;&gt;github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;lets-start&quot;&gt;Let’s start&lt;/h3&gt;
+&lt;p&gt;In jekyll docker image documentation we may find such an example of use:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;JEKYLL_VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.5
+docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--volume&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PWD&lt;/span&gt;:/srv/jekyll &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; jekyll/builder:&lt;span class=&quot;nv&quot;&gt;$JEKYLL_VERSION&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  jekyll build&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The example above works fine, but the command is quite complex and hard to remember.
+To simplify we may use &lt;a href=&quot;https://docs.docker.com/compose/&quot;&gt;docker-compose&lt;/a&gt; tool.&lt;/p&gt;
+
+&lt;p&gt;First we need to create &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; file with content bellow&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span class=&quot;na&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll/jekyll:latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;JEKYLL_VERSION=3.5&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;network_mode&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;host&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$PWD:/srv/jekyll&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And now we may build our project by typing&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt; docker-compose run site jekyll build&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;or serve&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt; docker-compose run site jekyll serve&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This approach works fine but is slow. Everything because &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; creates new container on each &lt;code class=&quot;highlighter-rouge&quot;&gt;run&lt;/code&gt; command.
+To solve this we need to add separate service definition in &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt; file, for each &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll&lt;/code&gt; command that we want to execute.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2'&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;serve&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;JEKYLL_VERSION=3.5&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll serve&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll/jekyll:latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;network_mode&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;host&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$PWD:/srv/jekyll&lt;/span&gt;
+
+  &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;JEKYLL_VERSION=3.5&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll build&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll/jekyll:latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;network_mode&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;host&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$PWD:/srv/jekyll&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And now we may build our project by typing&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt; docker-compose up build&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;or serve&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt; docker-compose up serve&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;On the first run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; will build container from scratch and execution time will be similar to the previous approach.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker-compose up build
+
+Creating dev_build_1 ... 
+Creating dev_build_1 ... &lt;span class=&quot;k&quot;&gt;done
+&lt;/span&gt;Attaching to dev_build_1
+build_1  | The following gems are missing
+build_1  |  &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; jekyll-archives &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2.1.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+build_1  |  &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; jekyll-whiteglass &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.3.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+build_1  | Install missing gems with &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bundle install&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+build_1  | Fetching gem metadata from https://rubygems.org/...........
+build_1  | Fetching version metadata from https://rubygems.org/..
+build_1  | Fetching dependency metadata from https://rubygems.org/.
+build_1  | Using public_suffix 3.0.0
+build_1  | Using bundler 1.15.4
+build_1  | Using colorator 1.1.0
+build_1  | Using ffi 1.9.18
+build_1  | Using forwardable-extended 2.6.0
+build_1  | Using rb-fsevent 0.10.2
+build_1  | Using kramdown 1.15.0
+build_1  | Using liquid 4.0.0
+build_1  | Using mercenary 0.3.6
+build_1  | Using rouge 2.2.1
+build_1  | Using safe_yaml 1.0.4
+build_1  | Using jekyll-paginate 1.1.0
+build_1  | Using addressable 2.5.2
+build_1  | Using rb-inotify 0.9.10
+build_1  | Using pathutil 0.14.0
+build_1  | Using sass-listen 4.0.0
+build_1  | Using listen 3.0.8
+build_1  | Using sass 3.5.1
+build_1  | Using jekyll-watch 1.5.0
+build_1  | Using jekyll-sass-converter 1.5.0
+build_1  | Using jekyll 3.6.0
+build_1  | Fetching jekyll-archives 2.1.1
+build_1  | Installing jekyll-archives 2.1.1
+build_1  | Using jekyll-feed 0.9.2
+build_1  | Using jekyll-sitemap 1.1.1
+build_1  | Using minima 2.1.1
+build_1  | Fetching jekyll-whiteglass 1.3.0
+build_1  | Installing jekyll-whiteglass 1.3.0
+build_1  | Bundle &lt;span class=&quot;nb&quot;&gt;complete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; 5 Gemfile dependencies, 26 gems now installed.
+build_1  | Bundled gems are installed into /usr/local/bundle.
+build_1  | Configuration file: /srv/jekyll/_config.yml
+build_1  |             Source: /srv/jekyll
+build_1  |        Destination: /srv/jekyll/_site
+build_1  |  Incremental build: disabled. Enable with &lt;span class=&quot;nt&quot;&gt;--incremental&lt;/span&gt;
+build_1  |       Generating... 
+build_1  |                     &lt;span class=&quot;k&quot;&gt;done in &lt;/span&gt;0.276 seconds.
+build_1  |  Auto-regeneration: disabled. Use &lt;span class=&quot;nt&quot;&gt;--watch&lt;/span&gt; to enable.
+build_1  | Configuration file: /srv/jekyll/_config.yml
+build_1  |             Source: /srv/jekyll
+build_1  |        Destination: /srv/jekyll/_site
+build_1  |  Incremental build: disabled. Enable with &lt;span class=&quot;nt&quot;&gt;--incremental&lt;/span&gt;
+build_1  |       Generating... 
+build_1  |                     &lt;span class=&quot;k&quot;&gt;done in &lt;/span&gt;0.269 seconds.
+build_1  |  Auto-regeneration: disabled. Use &lt;span class=&quot;nt&quot;&gt;--watch&lt;/span&gt; to enable.
+dev_build_1 exited with code 0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;But with the second run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose&lt;/code&gt; will reuse existing container and only execute &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll build&lt;/code&gt; without installing &lt;code class=&quot;highlighter-rouge&quot;&gt;gems&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker-compose up build
+
+Starting dev_build_1 ... 
+Starting dev_build_1 ... &lt;span class=&quot;k&quot;&gt;done
+&lt;/span&gt;Attaching to dev_build_1
+build_1  | The Gemfiles dependencies are satisfied
+build_1  | Configuration file: /srv/jekyll/_config.yml
+build_1  |             Source: /srv/jekyll
+build_1  |        Destination: /srv/jekyll/_site
+build_1  |  Incremental build: disabled. Enable with &lt;span class=&quot;nt&quot;&gt;--incremental&lt;/span&gt;
+build_1  |       Generating... 
+build_1  |                     &lt;span class=&quot;k&quot;&gt;done in &lt;/span&gt;0.283 seconds.
+build_1  |  Auto-regeneration: disabled. Use &lt;span class=&quot;nt&quot;&gt;--watch&lt;/span&gt; to enable.
+build_1  | Configuration file: /srv/jekyll/_config.yml
+build_1  |             Source: /srv/jekyll
+build_1  |        Destination: /srv/jekyll/_site
+build_1  |  Incremental build: disabled. Enable with &lt;span class=&quot;nt&quot;&gt;--incremental&lt;/span&gt;
+build_1  |       Generating... 
+build_1  |                     &lt;span class=&quot;k&quot;&gt;done in &lt;/span&gt;0.288 seconds.
+build_1  |  Auto-regeneration: disabled. Use &lt;span class=&quot;nt&quot;&gt;--watch&lt;/span&gt; to enable.
+dev_build_1 exited with code 0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We could stop off at this point but we can do it even better. Currently each service definition contains some recurring configuration options like:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;    &lt;span class=&quot;na&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;JEKYLL_VERSION=3.5&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll/jekyll:latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;network_mode&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;host&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;${PWD}:/srv/jekylls&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We may resolve this using &lt;a href=&quot;https://docs.docker.com/compose/extends/&quot;&gt;extends&lt;/a&gt; field.
+To do it we need to split our configuration into two separate files. The first will contain recurring definition, the second will provide custom configuration fields.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose-base.yml&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2'&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;jekyll&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;JEKYLL_VERSION=3.5&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll/jekyll:latest&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;network_mode&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;host&quot;&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;${PWD}:/srv/jekylls&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yml&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2'&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;serve&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;extends&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; 
+      &lt;span class=&quot;na&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;docker-compose-base.yml&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll&lt;/span&gt; 
+    &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll serve&lt;/span&gt;
+  
+  &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;extends&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; 
+      &lt;span class=&quot;na&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;docker-compose-base.yml&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll&lt;/span&gt; 
+    &lt;span class=&quot;na&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;jekyll build&lt;/span&gt; &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This modification has no impact on how we start &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll&lt;/code&gt; commands. Everything is the same as in the previous example.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt; docker-compose up build
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt; docker-compose up serve&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+
+      
+        <category term="jekyll" />
+      
+        <category term="docker" />
+      
+        <category term="docker-compose" />
+      
+
+      
+
+      
+        <summary type="html">Jekyll is a cool piece of software but its configuration on e local device may be painful for people who are not familiar with Ruby stack. To simplify this process we may use jekyll inside docker image. In this tutorial I will use official jekyll docker image from docker hub. Source code and documentation of this image is available on github.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+</feed>
