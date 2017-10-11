@@ -49,3 +49,5 @@ keep_files:
 exclude:
     - docker-compose.yml
     - docker-compose-base.yml    
+    - Gemfile
+    - Gemfile.lock
