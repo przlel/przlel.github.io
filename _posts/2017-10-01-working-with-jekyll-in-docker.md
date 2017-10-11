@@ -5,12 +5,12 @@ date:   2017-10-02
 categories: jekyll docker docker-compose
 ---
 
-`Jekyll` is a cool piece of software but configuration of it on local machine may be painful for people that are not familiar with Ruby stack. To simplify this process we may use `jekyll` inside [docker](https://www.docker.com/) image. 
+`Jekyll` is a cool piece of software but its configuration on e local device may be painful for people who are not familiar with Ruby stack. To simplify this process we may use `jekyll` inside [docker](https://www.docker.com/) image. 
 In this tutorial I will use official `jekyll` docker image from [docker hub](https://hub.docker.com/r/jekyll/jekyll/).
  Source code and documentation of this image is available on [github](https://github.com/jekyll/docker/blob/master/README.md).
 
-### Lets start
-In jekyll docker image documentation we may found such example of use: 
+### Let's start
+In jekyll docker image documentation we may find such an example of use: 
 
 {%  highlight bash %}
 export JEKYLL_VERSION=3.5
@@ -20,10 +20,10 @@ docker run --rm \
   jekyll build
 {% endhighlight %}
 
-Example works fine, but command is quite complex and hard to remember.
+The example above works fine, but the command is quite complex and hard to remember.
 To simplify we may use [docker-compose](https://docs.docker.com/compose/) tool.
 
-First we need to create `docker-compose.yml` file with bellow content
+First we need to create `docker-compose.yml` file with content bellow 
 
 {% highlight yml %}
 services:
@@ -49,7 +49,7 @@ or serve
  $  docker-compose run site jekyll serve
 {% endhighlight %}
 
-This approach works fine but is slow. Everything because `docker-compose` create new container on each `run` command.
+This approach works fine but is slow. Everything because `docker-compose` creates new container on each `run` command.
 To solve this we need to add separate service definition in `docker-compose.yml` file, for each `jekyll` command that we want to execute.
 
 {% highlight yaml %}
@@ -87,7 +87,7 @@ or serve
 {% endhighlight %}
 
 
-On first run `docker-compose` will build container from scratch and execution time will be similar to previous approach. 
+On the first run `docker-compose` will build container from scratch and execution time will be similar to the previous approach. 
 
 {% highlight bash %}
 $ docker-compose up build
@@ -149,7 +149,7 @@ build_1  |  Auto-regeneration: disabled. Use --watch to enable.
 dev_build_1 exited with code 0
 {% endhighlight %}
 
-But with second run `docker-compose` will reuse existing container and only execute `jekyll build` without installing `gems`
+But with the second run `docker-compose` will reuse existing container and only execute `jekyll build` without installing `gems`
 
 {% highlight bash %}
 $ docker-compose up build
@@ -176,7 +176,8 @@ dev_build_1 exited with code 0
 
 {% endhighlight %}
 
-We could stop off at this point but we can do it even better. Currently each service definition contains some redundant configuration options like:
+We could stop off at this point but we can do it even better. Currently each service definition contains some recurring configuration options like:
+
 {% highlight yaml %}
     environment:
       - JEKYLL_VERSION=3.5
@@ -186,9 +187,8 @@ We could stop off at this point but we can do it even better. Currently each ser
       - ${PWD}:/srv/jekylls
 {% endhighlight %}
 
-We may resolve this using [extends](https://docs.docker.com/compose/extends/) filed.
-To do it we need to split our configuration to two separate files. First will contain redundant definition, second will
-provide custom configuration fields.  
+We may resolve this using [extends](https://docs.docker.com/compose/extends/) field.
+To do it we need to split our configuration into two separate files. The first will contain recurring definition, the second will provide custom configuration fields.  
 
  `docker-compose-base.yml`
 {% highlight yaml %}
@@ -221,7 +221,7 @@ services:
     command: jekyll build 
 {% endhighlight %}
 
-This modification has no impact on how we start `jekyll` commands. Everything is same as in previous example.
+This modification has no impact on how we start `jekyll` commands. Everything is the same as in the previous example.
 
 {%  highlight bash %}
  $  docker-compose up build

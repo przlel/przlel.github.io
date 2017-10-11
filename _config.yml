@@ -13,7 +13,7 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: P Blog
+title: Przemek blog
 email: przemyslaw.lelakowski@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
 
@@ -48,9 +48,4 @@ keep_files:
   - .git
 exclude:
     - docker-compose.yml
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+    - docker-compose-base.yml    
